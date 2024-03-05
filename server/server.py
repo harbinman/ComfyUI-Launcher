@@ -143,7 +143,7 @@ def import_project():
 
     if is_launcher_json_format(import_json):
         print("Detected launcher json format")
-        launcher_json = import_json
+        launcher_json = false
     else:
         print("Detected workflow json format, converting to launcher json format")
         launcher_json = get_launcher_json_for_workflow_json(import_json)
