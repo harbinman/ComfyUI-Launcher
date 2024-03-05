@@ -175,8 +175,8 @@ def setup_initial_models_folder(models_folder_path):
 
 
 def is_launcher_json_format(import_json):
-    if "format" in import_json and import_json["format"] == "comfyui_launcher":
-        return True
+    # if "format" in import_json and import_json["format"] == "comfyui_launcher":
+    #     return True
     return False
 
 def setup_custom_nodes_from_snapshot(project_folder_path, launcher_json):
