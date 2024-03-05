@@ -513,14 +513,12 @@ def create_comfyui_project(
 def is_port_in_use(port: int) -> bool:
     import socket
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    return s.connect_ex(('localhost', port)) == 0
-    # return False  # 总是返回 False，表示端口未被占用
+        return s.connect_ex(('localhost', port)) == 0
 
 def find_free_port():
     with socket.socket() as s:
-    s.bind(('', 0))            # Bind to a free port provided by the host.
-    return s.getsockname()[1]  # Return the port number assigned.
-    # return 55753  # 总是返回指定的端口号
+        s.bind(('', 0))            # Bind to a free port provided by the host.
+        return s.getsockname()[1]  # Return the port number assigned.
 
 def create_symlink(source, target):
     if os.name == 'nt':  # Check if running on Windows
