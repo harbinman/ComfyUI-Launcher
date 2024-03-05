@@ -429,14 +429,14 @@ def create_comfyui_project(
         ["git", "clone", COMFYUI_REPO_URL, os.path.join(project_folder_path, 'comfyui')],
     )
 
-    # if launcher_json:
-    #     comfyui_commit_hash = launcher_json["snapshot_json"]["comfyui"]
-    #     if comfyui_commit_hash:
-    #         run_command(
-    #             ["git", "checkout", comfyui_commit_hash],
-    #             cwd=os.path.join(project_folder_path, 'comfyui'),
-    #         )
-    #     launcher_json['workflow_json'] = normalize_model_filepaths_in_workflow_json(launcher_json['workflow_json'])
+    if launcher_json:
+        comfyui_commit_hash = launcher_json["snapshot_json"]["comfyui"]
+        if comfyui_commit_hash:
+            run_command(
+                ["git", "checkout", comfyui_commit_hash],
+                cwd=os.path.join(project_folder_path, 'comfyui'),
+            )
+        launcher_json['workflow_json'] = normalize_model_filepaths_in_workflow_json(launcher_json['workflow_json'])
 
     
     # move the comfyui/web/index.html file to comfyui/web/comfyui_index.html
