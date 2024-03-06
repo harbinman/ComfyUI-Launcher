@@ -431,6 +431,7 @@ def create_comfyui_project(
 
     if launcher_json:
         # comfyui_commit_hash = launcher_json["snapshot_json"]["comfyui"]
+        comfyui_commit_hash = null
         if comfyui_commit_hash:
             run_command(
                 ["git", "checkout", comfyui_commit_hash],
