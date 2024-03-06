@@ -352,24 +352,25 @@ def get_launcher_json_for_workflow_json(workflow_json):
 
 
 def set_default_workflow_from_launcher_json(project_folder_path, launcher_json):
-    if not launcher_json:
-        return
-    workflow_json = launcher_json["workflow_json"]
-    with open(
-        os.path.join(
-            project_folder_path, "comfyui", "web", "scripts", "defaultGraph.js"
-        ),
-        "w",
-    ) as f:
-        f.write(f"export const defaultGraph = {json.dumps(workflow_json, indent=2)};")
+    return
+    # if not launcher_json:
+    #     return
+    # workflow_json = launcher_json["workflow_json"]
+    # with open(
+    #     os.path.join(
+    #         project_folder_path, "comfyui", "web", "scripts", "defaultGraph.js"
+    #     ),
+    #     "w",
+    # ) as f:
+    #     f.write(f"export const defaultGraph = {json.dumps(workflow_json, indent=2)};")
 
-    with open(
-        os.path.join(
-            project_folder_path, "comfyui", "custom_nodes", "ComfyUI-ComfyWorkflows", "current_graph.json"
-        ),
-        "w",
-    ) as f:
-        json.dump(workflow_json, f)
+    # with open(
+    #     os.path.join(
+    #         project_folder_path, "comfyui", "custom_nodes", "ComfyUI-ComfyWorkflows", "current_graph.json"
+    #     ),
+    #     "w",
+    # ) as f:
+    #     json.dump(workflow_json, f)
 
 
 def get_launcher_state(project_folder_path):
