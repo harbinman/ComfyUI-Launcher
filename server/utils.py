@@ -245,98 +245,99 @@ def set_config(config):
         json.dump(config, f)
 
 def setup_files_from_launcher_json(project_folder_path, launcher_json):
-    if not launcher_json:
-        return
+    return
+    # if not launcher_json:
+    #     return
 
-    missing_download_files = set()
-    config = get_config()
+    # missing_download_files = set()
+    # config = get_config()
 
-    # download all necessary files
-    for file_infos in launcher_json["files"]:
-        downloaded_file = False
-        for file_info in file_infos:
-            if downloaded_file:
-                break
-            download_url = file_info["download_url"]
-            dest_relative_path = file_info["dest_relative_path"]
-            sha256_checksum = file_info["sha256_checksum"]
+    # # download all necessary files
+    # for file_infos in launcher_json["files"]:
+    #     downloaded_file = False
+    #     for file_info in file_infos:
+    #         if downloaded_file:
+    #             break
+    #         download_url = file_info["download_url"]
+    #         dest_relative_path = file_info["dest_relative_path"]
+    #         sha256_checksum = file_info["sha256_checksum"]
 
-            if not download_url:
-                print(f"WARNING: Could not find download URL for: {dest_relative_path}")
-                missing_download_files.add(dest_relative_path)
-                continue
+    #         if not download_url:
+    #             print(f"WARNING: Could not find download URL for: {dest_relative_path}")
+    #             missing_download_files.add(dest_relative_path)
+    #             continue
 
-            dest_path = os.path.join(project_folder_path, "comfyui", dest_relative_path)
-            if os.path.exists(dest_path):
-                assert (
-                    compute_sha256_checksum(dest_path) == sha256_checksum
-                ), f"File already exists at {dest_path} but has different checksum"
-                downloaded_file = True
-                break
+    #         dest_path = os.path.join(project_folder_path, "comfyui", dest_relative_path)
+    #         if os.path.exists(dest_path):
+    #             assert (
+    #                 compute_sha256_checksum(dest_path) == sha256_checksum
+    #             ), f"File already exists at {dest_path} but has different checksum"
+    #             downloaded_file = True
+    #             break
 
-            os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+    #         os.makedirs(os.path.dirname(dest_path), exist_ok=True)
 
-            num_attempts = 0
-            download_successful = False
+    #         num_attempts = 0
+    #         download_successful = False
 
-            print(f"Downloading {download_url} to {dest_path}")
+    #         print(f"Downloading {download_url} to {dest_path}")
 
-            while num_attempts < MAX_DOWNLOAD_ATTEMPTS:
-                try:
-                    response = requests.head(download_url, allow_redirects=False)
-                    response.raise_for_status()
+    #         while num_attempts < MAX_DOWNLOAD_ATTEMPTS:
+    #             try:
+    #                 response = requests.head(download_url, allow_redirects=False)
+    #                 response.raise_for_status()
 
-                    headers = {}
+    #                 headers = {}
 
-                    if 300 < response.status_code < 400:
-                        url = response.headers.get('Location')
-                        assert url, f"Failed to get redirect location for {download_url}"
-                        # parse the url to get the host using 
-                        hostname = urlparse(url).hostname
-                        if hostname == "civitai.com":
-                            headers["Authorization"] = f"Bearer {config['credentials']['civitai']['apikey']}"
-                        download_url = url
+    #                 if 300 < response.status_code < 400:
+    #                     url = response.headers.get('Location')
+    #                     assert url, f"Failed to get redirect location for {download_url}"
+    #                     # parse the url to get the host using 
+    #                     hostname = urlparse(url).hostname
+    #                     if hostname == "civitai.com":
+    #                         headers["Authorization"] = f"Bearer {config['credentials']['civitai']['apikey']}"
+    #                     download_url = url
                     
-                    with requests.get(
-                        download_url, headers=headers, allow_redirects=True, stream=True
-                    ) as response:
-                        total_size = int(response.headers.get("content-length", 0))
-                        with tqdm(total=total_size, unit="B", unit_scale=True) as pb:
-                            with open(dest_path, "wb") as f:
-                                for chunk in response.iter_content(chunk_size=10 * 1024):
-                                    pb.update(len(chunk))
-                                    if chunk:
-                                        f.write(chunk)
+    #                 with requests.get(
+    #                     download_url, headers=headers, allow_redirects=True, stream=True
+    #                 ) as response:
+    #                     total_size = int(response.headers.get("content-length", 0))
+    #                     with tqdm(total=total_size, unit="B", unit_scale=True) as pb:
+    #                         with open(dest_path, "wb") as f:
+    #                             for chunk in response.iter_content(chunk_size=10 * 1024):
+    #                                 pb.update(len(chunk))
+    #                                 if chunk:
+    #                                     f.write(chunk)
                     
-                    if compute_sha256_checksum(dest_path) == sha256_checksum:
-                        download_successful = True
-                        if dest_relative_path in missing_download_files:
-                            missing_download_files.remove(dest_relative_path)
-                        break
-                    if os.path.exists(dest_path):
-                        os.remove(dest_path)
-                except Exception as e:
-                    import traceback
-                    traceback.print_exc()
-                    if os.path.exists(dest_path):
-                        os.remove(dest_path)
-                num_attempts += 1
+    #                 if compute_sha256_checksum(dest_path) == sha256_checksum:
+    #                     download_successful = True
+    #                     if dest_relative_path in missing_download_files:
+    #                         missing_download_files.remove(dest_relative_path)
+    #                     break
+    #                 if os.path.exists(dest_path):
+    #                     os.remove(dest_path)
+    #             except Exception as e:
+    #                 import traceback
+    #                 traceback.print_exc()
+    #                 if os.path.exists(dest_path):
+    #                     os.remove(dest_path)
+    #             num_attempts += 1
 
-            if not download_successful:
-                # print(f"WARNING: Failed to download file: {download_url}")
-                missing_download_files.add(dest_relative_path)
-                continue
+    #         if not download_successful:
+    #             # print(f"WARNING: Failed to download file: {download_url}")
+    #             missing_download_files.add(dest_relative_path)
+    #             continue
 
-            downloaded_file = True
-            break
+    #         downloaded_file = True
+    #         break
 
-        if not downloaded_file:
-            print(f"WARNING: Failed to download file: {dest_relative_path}")
-            missing_download_files.add(dest_relative_path)
-        else:
-            print(f"Downloaded {dest_relative_path}")
-        # assert downloaded_file, f"Failed to download file: {dest_relative_path}"
-    return missing_download_files
+    #     if not downloaded_file:
+    #         print(f"WARNING: Failed to download file: {dest_relative_path}")
+    #         missing_download_files.add(dest_relative_path)
+    #     else:
+    #         print(f"Downloaded {dest_relative_path}")
+    #     # assert downloaded_file, f"Failed to download file: {dest_relative_path}"
+    # return missing_download_files
 
 
 def get_launcher_json_for_workflow_json(workflow_json):
