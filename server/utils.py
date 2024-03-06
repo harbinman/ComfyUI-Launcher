@@ -431,12 +431,12 @@ def create_comfyui_project(
 
     if launcher_json:
         # comfyui_commit_hash = launcher_json["snapshot_json"]["comfyui"]
-        comfyui_commit_hash = null
-        if comfyui_commit_hash:
-            run_command(
-                ["git", "checkout", comfyui_commit_hash],
-                cwd=os.path.join(project_folder_path, 'comfyui'),
-            )
+        # comfyui_commit_hash = null
+        # if comfyui_commit_hash:
+        #     run_command(
+        #         ["git", "checkout", comfyui_commit_hash],
+        #         cwd=os.path.join(project_folder_path, 'comfyui'),
+        #     )
         launcher_json['workflow_json'] = normalize_model_filepaths_in_workflow_json(launcher_json['workflow_json'])
 
     
