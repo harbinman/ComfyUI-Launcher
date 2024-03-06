@@ -508,7 +508,7 @@ def create_comfyui_project(
     )
 
     setup_files_from_launcher_json(project_folder_path, launcher_json)
-    set_default_workflow_from_launcher_json(project_folder_path, launcher_json)
+    # set_default_workflow_from_launcher_json(project_folder_path, launcher_json)
 
     set_launcher_state_data(
         project_folder_path, {"status_message": "Ready", "state": "ready"}
