@@ -179,42 +179,42 @@ def is_launcher_json_format(import_json):
         return True
     return False
 
-def setup_custom_nodes_from_snapshot(project_folder_path, launcher_json):
-    if not launcher_json:
-        return
-    for custom_node_repo_url, custom_node_repo_info in launcher_json["snapshot_json"][
-        "git_custom_nodes"
-    ].items():
-        if any(
-            [
-                custom_node_to_ignore in custom_node_repo_url
-                for custom_node_to_ignore in CUSTOM_NODES_TO_IGNORE_FROM_SNAPSHOTS
-            ]
-        ):
-            continue
+# def setup_custom_nodes_from_snapshot(project_folder_path, launcher_json):
+#     if not launcher_json:
+#         return
+#     for custom_node_repo_url, custom_node_repo_info in launcher_json["snapshot_json"][
+#         "git_custom_nodes"
+#     ].items():
+#         if any(
+#             [
+#                 custom_node_to_ignore in custom_node_repo_url
+#                 for custom_node_to_ignore in CUSTOM_NODES_TO_IGNORE_FROM_SNAPSHOTS
+#             ]
+#         ):
+#             continue
 
-        custom_node_hash = custom_node_repo_info["hash"]
-        custom_node_disabled = custom_node_repo_info["disabled"]
-        if custom_node_disabled:
-            continue
-        custom_node_name = custom_node_repo_url.split("/")[-1].replace(".git", "")
-        custom_node_path = os.path.join(
-            project_folder_path, "comfyui", "custom_nodes", custom_node_name
-        )
+#         custom_node_hash = custom_node_repo_info["hash"]
+#         custom_node_disabled = custom_node_repo_info["disabled"]
+#         if custom_node_disabled:
+#             continue
+#         custom_node_name = custom_node_repo_url.split("/")[-1].replace(".git", "")
+#         custom_node_path = os.path.join(
+#             project_folder_path, "comfyui", "custom_nodes", custom_node_name
+#         )
         
-        # Clone the custom node repository
-        run_command(["git", "clone", custom_node_repo_url, custom_node_path, "--recursive"])
+#         # Clone the custom node repository
+#         run_command(["git", "clone", custom_node_repo_url, custom_node_path, "--recursive"])
 
-        if custom_node_hash:
-            # Checkout the specific hash
-            run_command(["git", "checkout", custom_node_hash], cwd=custom_node_path)
+#         if custom_node_hash:
+#             # Checkout the specific hash
+#             run_command(["git", "checkout", custom_node_hash], cwd=custom_node_path)
 
-        pip_requirements_path = os.path.join(custom_node_path, "requirements.txt")
-        if os.path.exists(pip_requirements_path):
-            run_command_in_project_venv(
-                project_folder_path,
-                f"pip install -r {os.path.join(custom_node_path, 'requirements.txt')}",
-            )
+#         pip_requirements_path = os.path.join(custom_node_path, "requirements.txt")
+#         if os.path.exists(pip_requirements_path):
+#             run_command_in_project_venv(
+#                 project_folder_path,
+#                 f"pip install -r {os.path.join(custom_node_path, 'requirements.txt')}",
+#             )
 
 
 def compute_sha256_checksum(file_path):
